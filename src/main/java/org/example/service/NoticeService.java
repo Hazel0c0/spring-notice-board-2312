@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface NoticeService {
 
-	public List<?> getBoardList(Object param) throws Exception;
+	List<?> boardList(Object param) throws Exception;
 
+	int insertBoard(Object param) throws Exception;
 	}

@@ -18,7 +18,8 @@ public class NoticeController {
 
 	private final NoticeServiceImpl noticeService;
 
-	 // 공지사항 페이지 이동
+
+	// 공지사항 페이지 이동
 	@GetMapping("Notice.do")
 	public String RtAdBook(){
 		return "bbs/notice/Notice";
@@ -26,27 +27,39 @@ public class NoticeController {
 
 	/**
 	 * 공지사항 리스트 조회
-	 * @param request : title, id, 검색 일자(st ~ ed)
+	 * @param request : POST_TIT (제목), REGMN_ID (ID), REG_ST_DT, REG_ED_DT (검색 일자)
 	 * @return "rsAjax" : boardList
 	 */
 	@PostMapping("selectNoticeList.do")
 	public @ResponseBody Map<String, Object> selectNoticeList(@RequestBody Map<String, Object> request) throws Exception {
-		Map<String, Object> response = new HashMap<>();
-		Map param = (Map) request.get("param");
+		log.debug("selectNoticeList POST : request - {}", request);
 
-		/*
-		LoginVO vo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		param.put("ENO", vo.getEno());
-		 * Egov framework 를 통해 사용자 객체 반환
-		 */
-
-		// 요청한 객체 List<Map> 반환
-		List<?> boardList = noticeService.getBoardList(param);
-		response.put("rsAjax", boardList);
-
-		return response;
+		return noticeService.getBoardList(request);
 	}
 
 
+	// 공지사항 등록 페이지 이동
+	@GetMapping("reg_Notice.do")
+	public String reg_RtAdBook(
+			@RequestParam(required = false,value = "post_sqno") String postSqno
+			, @RequestParam String job) throws Exception {
+		log.debug("reg_Notice GET : postSqno - {}, job - {} ",postSqno,job);
+
+
+		return "bbs/notice/reg_Notice";
+	}
+	/**
+	 * 공지사항 등록
+	 * @param dto
+	 * @return Map<String, Object>
+	 * @throws Exception
+	 */
+	@PostMapping("saveNotice.do")
+	@ResponseBody
+	public Map<String,Object> insertGroupList(@RequestBody Map<String,Object> dto) throws Exception{
+		log.debug("savaNotice POST : dto - {}", dto);
+
+		return noticeService.savePost(dto);
+	}
 
 }

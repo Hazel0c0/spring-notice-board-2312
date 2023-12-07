@@ -10,11 +10,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoticeDao {
 
+
 	private static final String NAME_SPACE = "NoticeService.";
 	private final SqlSessionTemplate sessionTemplate;
 
 	/**
 	 * list 조회
+	 *
 	 * @param param
 	 * @return : List<Map>
 	 */
@@ -22,4 +24,7 @@ public class NoticeDao {
 		return sessionTemplate.selectList(NAME_SPACE + "getBoardList", param);
 	}
 
+	public int insertPost(Object param) {
+		return sessionTemplate.insert(NAME_SPACE + "insertPost", param);
+	}
 }
