@@ -44,11 +44,7 @@ public class NoticeServiceImpl implements NoticeService {
         Map map = (Map) dto.get("param");
         System.out.println("map = " + map);
 
-		/*
-		LoginVO vo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		param.put("ENO", vo.getEno());
-		 * Egov framework 를 통해 사용자 객체 반환
-		 */
+//		사용자 객체
 
         Map<String,Object> result = new HashMap<>();
         log.debug("Service : savePost - {}" , insertBoard(map) > 0);

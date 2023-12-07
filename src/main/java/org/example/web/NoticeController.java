@@ -6,8 +6,6 @@ import org.example.service.impl.NoticeServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,7 +25,7 @@ public class NoticeController {
 
 	/**
 	 * 공지사항 리스트 조회
-	 * @param request : POST_TIT (제목), REGMN_ID (ID), REG_ST_DT, REG_ED_DT (검색 일자)
+	 * @param request : 제목, id, 검색 기간 (st - ed)
 	 * @return "rsAjax" : boardList
 	 */
 	@PostMapping("selectNoticeList.do")
