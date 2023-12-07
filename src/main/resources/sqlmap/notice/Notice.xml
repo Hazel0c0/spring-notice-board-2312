@@ -56,27 +56,9 @@
             WHERE rownum <![CDATA[ <=]]>#{rownum}
         </if>
     </select>
-    <select id="selectBoardList" parameterType="java.util.Map"
-            resultType="java.util.HashMap">
-        SELECT POST_SQNO
-             , POST_TIT
-             , POST_CNTN
-             , MAIN_VW_POP_MK_YN
-             , GRP_POST_SQNO
-             , GRP_POST_STP_NO
-             , GRP_POST_LVL_NO
-             , SCH_NT
-             , REGMN_ID
-             , ATTFL_ID
-             , (SELECT EMP_NM FROM TB_SB_CM_EMP WHERE ENO = A.REGMN_ID) AS EMP_NM
-        FROM TB_SB_OT_BORD_J A
-        WHERE POST_TP_DSC = '1'
-          AND POST_SQNO = #{POST_SQNO}
-    </select>
 
-
-    <insert id="insertBoard" parameterType="java.util.Map">
-        INSERT INTO TB_SB_OT_BORD (
+    <insert id="insertPost" parameterType="java.util.Map">
+        INSERT INTO TB_SB_OT_BORD_J (
         POST_TP_DSC,
         POST_SQNO,
         CO_CD,
@@ -92,7 +74,7 @@
         REG_DTM
         ) VALUES (
         '1',
-        (SELECT (CASE WHEN MAX(POST_SQNO) IS NULL THEN 0 ELSE MAX(POST_SQNO) END)+1 FROM TB_SB_OT_BORD
+        (SELECT (CASE WHEN MAX(POST_SQNO) IS NULL THEN 0 ELSE MAX(POST_SQNO) END)+1 FROM TB_SB_OT_BORD_J
         WHERE POST_TP_DSC = '1'),
         '',
         #{POST_TIT},
@@ -107,43 +89,5 @@
         TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
         )
     </insert>
-
-    <update id="updateBoard" parameterType="java.util.Map">
-        UPDATE TB_SB_OT_BORD
-        SET POST_TIT          = #{POST_TIT}
-          , POST_CNTN         = #{POST_CNTN}
-          , MAIN_VW_POP_MK_YN = #{MAIN_VW_POP_MK_YN}
-          , ATTFL_ID          = #{ATTFL_ID}
-          , MODMN_ID          = #{MODMN_ID}
-          , MOD_DTM           = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
-        WHERE POST_SQNO = #{POST_SQNO}
-          AND POST_TP_DSC = '1'
-    </update>
-
-    <delete id="deleteBoard" parameterType="java.util.Map">
-        UPDATE TB_SB_OT_BORD
-        SET DEL_YN   = '1'
-          , MODMN_ID = #{MODMN_ID}
-          , MOD_DTM  = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
-        WHERE POST_SQNO = #{POST_SQNO}
-          AND POST_TP_DSC = '1'
-    </delete>
-
-    <update id="updateBoardSchNt" parameterType="String">
-        UPDATE TB_SB_OT_BORD
-        SET SCH_NT = SCH_NT + 1
-        WHERE POST_SQNO = #{POST_SQNO}
-          AND POST_TP_DSC = '1'
-    </update>
-
-    <update id="update_1day_disabled" parameterType="java.util.Map">
-        UPDATE TB_SB_CM_SCH_DAY
-        SET DISABLED_1DAY = TO_CHAR(SYSDATE, 'YYYYMMDD')
-          , MODMN_ID      = #{MODMN_ID}
-          , MOD_DTM       = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
-        WHERE POST_SQNO = #{POST_SQNO}
-          AND ENO = #{ENO}
-          AND BIZ_DSC = 'NTC'
-    </update>
 
 </mapper>

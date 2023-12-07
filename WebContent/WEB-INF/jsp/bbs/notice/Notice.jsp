@@ -9,7 +9,7 @@
         <div class="searchButton">
             <button type="button" id="BoardNtc_btn_search" class="swsButton">조회</button>
             <c:if test="${sessionScope.loginVO.authCd.contains('ROLE_ADMIN')}">
-                <button type="button" id="BoardNtc_btn_reg" class="swsButton">등록</button>
+                <button type="button" id="Notice_btn_reg" class="swsButton">등록</button>
             </c:if>
         </div>
     </div>
@@ -63,8 +63,6 @@
         grid_BoardNtcData,
         objBoardNtc;
 
-    const noticeURL = "/newsmartplus/bbs/notice/";
-
     objBoardNtc = {
 
         // 작성기간 초기화
@@ -85,25 +83,21 @@
 
         // 공지사항 List 요청
         fn_search: function () {
-            const param = new URLSearchParams();
-            param.append("POST_TIT", $('#BoardNtc_post_tit').val());
-            param.append("REGMN_ID", $('#BoardNtc_empNm').val());
-            param.append("REG_ST_DT", $('#BoardNtc_reg_st_dt').val().replace(/-/g, ''));
-            param.append("REG_ED_DT", $('#BoardNtc_reg_ed_dt').val().replace(/-/g, ''));
+            var service = new Service("/bbs/notice/selectNoticeList.do")
+                , param = new ParameterMap("param");
 
-            fetch(noticeURL+"selectNoticeList.do", {
-                method: 'POST',
-                body: param
-            })
-                .then(response => response.json())
-                .then(data => {
-                    grid_BoardNtcData = data.rsAjax;
-                    console.log(data.rsAjax);
-                    objBoardNtc.__createSBGrid();
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+            param.addParam("POST_TIT",$('#BoardNtc_post_tit').val());
+            param.addParam("REGMN_ID",$('#BoardNtc_empNm').val());
+            param.addParam("REG_ST_DT",$('#BoardNtc_reg_st_dt').val().replace(/-/g,''));
+            param.addParam("REG_ED_DT",$('#BoardNtc_reg_ed_dt').val().replace(/-/g,''));
+            service.addMap(param);
+            service.request();
+            service.addCallBack(function(data)
+            {
+                grid_BoardNtcData = data.rsAjax;
+
+                objBoardNtc.__createSBGrid();
+            });
         },
 
         __createSBGrid: function () {
@@ -178,9 +172,13 @@
             grid_BoardNtc.bind("dblclick", "objBoardNtc.eventProcess");
         },
         eventProcess: function (event) {
-            openPopup("reg_BoardNtc", "공지사항 수정", 700, 570, '/bbs/ntc/reg_BoardNtc.do?job=U&post_sqno=' + grid_BoardNtcData[grid_BoardNtc.getRow() - 1].POST_SQNO, function (rtn) {
-                if (rtn.search_yn) objBoardNtc.fn_search();
-            });
+            openPopup("reg_BoardNtc", "공지사항 수정"
+                , 700, 570
+                , '/bbs/ntc/reg_BoardNtc.do?job=U&post_sqno='
+                + grid_BoardNtcData[grid_BoardNtc.getRow() - 1].POST_SQNO
+                , function (rtn) {
+                    if (rtn.search_yn) objBoardNtc.fn_search();
+                });
         }
     };
 
@@ -193,10 +191,16 @@
             objBoardNtc.fn_search();
         });
 
-        $('#BoardNtc_btn_reg').click(function () {
-            openPopup("reg_BoardNtc", "공지사항 등록", 700, 570, '/bbs/ntc/reg_BoardNtc.do?job=I', function (rtn) {
-                if (rtn.search_yn) objBoardNtc.fn_search();
-            });
+
+        $('#Notice_btn_reg').click(function () {
+
+            openPopup("reg_Notice" // id
+                , "공지사항 등록" // title
+                , 700, 570 // w, h
+                , '/bbs/notice/reg_Notice.do?job=I' // url
+                , function (rtn) { // cbFunction
+                    if (rtn.search_yn) objBoardNtc.fn_search();
+                });
         });
 
 
