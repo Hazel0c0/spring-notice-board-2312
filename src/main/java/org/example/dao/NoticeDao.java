@@ -20,7 +20,7 @@ public class NoticeDao {
 	 * @param param
 	 * @return : List<Map>
 	 */
-	public List<?> getBoardList(Object param) {
+	public List<?> getPostList(Object param) {
 		return sessionTemplate.selectList(NAME_SPACE + "getBoardList", param);
 	}
 

@@ -36,7 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
     @Override
     public List<?> boardList(Object param) throws Exception {
-        return noticeDao.getBoardList(param);
+        return noticeDao.getPostList(param);
     }
 
     // 게시글 등록

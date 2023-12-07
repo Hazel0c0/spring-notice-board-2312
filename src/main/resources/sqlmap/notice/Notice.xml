@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="NoticeService">
 
-    <select id="getBoardList" parameterType="java.util.Map" resultType="java.util.HashMap">
+    <select id="getPostList" parameterType="java.util.Map" resultType="java.util.HashMap">
         SELECT ROWNUM
         ,POST_SQNO
         ,POST_TIT
